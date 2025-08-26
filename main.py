@@ -40,9 +40,9 @@ with mlflow.start_run():
     with open("classification_report.txt", "w") as f:
         f.write(report_str)
     mlflow.log_artifact("classification_report.txt")
-    mlflow.sklearn.log_model(pipeline, name="model", signature=signature)
-    #joblib.dump(pipeline, "pipeline.pkl")
-    #mlflow.log_artifact("pipeline.pkl")
+    #mlflow.sklearn.log_model(pipeline, name="model", signature=signature)
+    joblib.dump(pipeline, "pipeline.pkl")
+    mlflow.log_artifact("pipeline.pkl")
 
 with mlflow.start_run():
     mlflow.autolog()
@@ -58,6 +58,6 @@ with mlflow.start_run():
     with open("lr_classification_report.txt", "w") as f:
         f.write(report_str_lr)
     mlflow.log_artifact("lr_classification_report.txt")
-    #joblib.dump(lr, "lr_model.pkl")
-    #mlflow.log_artifact("lr_model.pkl")
-    mlflow.sklearn.log_model(pipeline2, name="lr_model", signature=signature2)
+    joblib.dump(pipeline2, "lr_model.pkl")
+    mlflow.log_artifact("lr_model.pkl")
+    #mlflow.sklearn.log_model(pipeline2, name="lr_model", signature=signature2)

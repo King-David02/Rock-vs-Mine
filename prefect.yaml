@@ -1,0 +1,41 @@
+# Welcome to your prefect.yaml file! You can use this file for storing and managing
+# configuration for deploying your flows. We recommend committing this file to source
+# control along with your flow code.
+
+# Generic metadata about this project
+name: Rock vs Mine
+prefect-version: 3.4.14
+
+# build section allows you to manage and build docker images
+build: null
+
+# push section allows you to manage if and how this project is uploaded to remote locations
+push: null
+
+# pull section allows you to provide instructions for cloning this project in remote locations
+pull:
+- prefect.deployments.steps.git_clone:
+    repository: https://github.com/King-David02/Rock-vs-Mine.git
+    branch: main
+
+# the deployments section allows you to provide configuration for deploying flows
+deployments:
+- name: Rock vs Mine
+  version: null
+  tags: []
+  concurrency_limit: null
+  description: "Main ML pipeline flow for Rock vs Mine classification\n\nThis flow\
+    \ orchestrates the entire ML process:\n1. Load data\n2. Split into train/test\n\
+    3. Train Random Forest model\n4. Train Logistic Regression model  \n5. Compare\
+    \ results"
+  entrypoint: main.py:ml_pipeline
+  parameters: {}
+  work_pool:
+    name: rock_mine
+    work_queue_name: null
+    job_variables: {}
+  schedules:
+  - interval: 86400.0
+    anchor_date: '2025-08-26T16:17:24.780323+00:00'
+    timezone: UTC
+    active: true

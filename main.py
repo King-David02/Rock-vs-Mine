@@ -18,7 +18,7 @@ from prefect import task, flow
 from typing import Tuple, Any
 import os
 
-# Initialize DagsHub connection
+
 dagshub.init(repo_owner='King-David02', repo_name='Rock-vs-Mine', mlflow=True)
 
 @task
@@ -48,19 +48,16 @@ def train_random_forest(X_train: np.ndarray, y_train: np.ndarray, X_test: np.nda
     with mlflow.start_run(run_name='Random Forest'):
         mlflow.autolog()
         
-        # Create and train pipeline
-        pipeline = make_pipeline(StandardScaler(), RandomForestClassifier())
+        pipeline = make_pipeline(StandardScaler(),
+                                  RandomForestClassifier())
         pipeline.fit(X_train, y_train)
         
-        # Make predictions
         y_pred = pipeline.predict(X_test)
         
-        # Create signature for model logging
         sample_data = X[:10]
         sample_prediction = pipeline.predict(sample_data)
         signature = infer_signature(sample_data, sample_prediction)
         
-        # Generate and log classification report
         report_str = classification_report(y_test, y_pred)
         with open("classification_report.txt", "w") as f:
             f.write(report_str)
@@ -82,19 +79,17 @@ def train_logistic_regression(X_train: np.ndarray, y_train: np.ndarray, X_test: 
     with mlflow.start_run(run_name='Logistic Regression'):
         mlflow.autolog()
         
-        # Create and train pipeline
-        pipeline = make_pipeline(StandardScaler(), LogisticRegression())
+
+        pipeline = make_pipeline(StandardScaler(),
+                                  LogisticRegression())
         pipeline.fit(X_train, y_train)
         
-        # Make predictions
         prediction = pipeline.predict(X_test)
         
-        # Create signature for model logging
         sample_data = X[:10]
         sample_prediction = pipeline.predict(sample_data)
         signature = infer_signature(sample_data, sample_prediction)
         
-        # Generate and log classification report
         report_str = classification_report(y_test, prediction)
         with open("lr_classification_report.txt", "w") as f:
             f.write(report_str)
@@ -137,22 +132,17 @@ def ml_pipeline(data_path: str = 'data/Sonar.csv'):
     """
     print("🚀 Starting Rock vs Mine ML Pipeline...")
     
-    # Load and prepare data
     X, y = load_data(data_path)
     
-    # Split data
     X_train, X_test, y_train, y_test = split_data(X, y)
     
-    # Train both models in parallel (Prefect handles this automatically!)
     rf_results = train_random_forest(X_train, y_train, X_test, y_test, X)
     lr_results = train_logistic_regression(X_train, y_train, X_test, y_test, X)
     
-    # Compare results
     final_results = compare_models(rf_results, lr_results)
     
     print("✅ Pipeline completed successfully!")
     return final_results
 
 if __name__ == "__main__":
-    # Run the pipeline
     result = ml_pipeline()

@@ -1,5 +1,3 @@
-version: '3.7'
-
 volumes:
   grafana_data: {}
 
@@ -31,7 +29,7 @@ services:
     image: grafana/grafana
     user: "472"
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes: 
       - ./config/grafana_datasources.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
     networks:

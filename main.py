@@ -13,7 +13,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, confusion_matrix
 import pickle
 import joblib
-
 from prefect import task, flow
 from typing import Tuple, Any
 import os

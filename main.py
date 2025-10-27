@@ -15,6 +15,7 @@ from evidently.ui.workspace import Workspace
 from evidently.sdk.panels import *
 import psycopg
 import os
+import joblib
 
 
 create_table = """
@@ -48,6 +49,8 @@ def train_random_forest(X_train, X_test, y_train, y_test, data, output_path):
             RandomForestClassifier()
         )
         pipeline = pipeline.fit(X_train, y_train)
+        with open('model/pipeline.pkl', 'wb') as f:
+            joblib.dump(pipeline, f)
         y_pred = pipeline.predict(X_test)
         data['prediction'] = pipeline.predict(data.drop(['Target'], axis=1))
         os.makedirs(os.path.dirname(output_path), exist_ok=True)

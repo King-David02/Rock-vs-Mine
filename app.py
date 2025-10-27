@@ -4,8 +4,10 @@ from pydantic import BaseModel
 import pandas as pd
 
 app = FastAPI()
-with open('model/pipeline.pkl', 'rb') as f:
+with open("model/pipeline.pkl", "rb") as f:
     model = joblib.load(f)
+
+
 class UserInput(BaseModel):
     Freq_1: float
     Freq_2: float
@@ -68,11 +70,13 @@ class UserInput(BaseModel):
     Freq_59: float
     Freq_60: float
 
-@app.get('/')
-def welcome_page():
-    return 'Hi, Welcome'
 
-@app.post('/predict')
+@app.get("/")
+def welcome_page():
+    return "Hi, Welcome"
+
+
+@app.post("/predict")
 def predict(frequencies: UserInput):
     df = pd.DataFrame([frequencies.model_dump()])
     y_pred = model.predict(df)
